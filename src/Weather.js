@@ -3,22 +3,21 @@ import axios from "axios";
 import "./Weather.css";
 
 export default function Weater() {
-  const [ready, setReady] = useState(false);
-  const [weatherData, setWeatherData] = useState({});
+  const [weatherData, setWeatherData] = useState({ ready: false });
 
   function handleResponse(response) {
     setWeatherData({
+      ready: true,
       temperature: response.data.main.temp,
-      wind: 12,
+      wind: response.data.wind.speed,
       city: response.data.name,
-      humidity: 78,
+      humidity: response.data.main.humidity,
       iconUrl: "https://ssl.gstatic.com/onebox/weather/64/rain_light.png",
       description: response.data.weather[0].description,
     });
-    setReady(true);
   }
 
-  if (ready) {
+  if (weatherData.ready) {
     return (
       <div className="Weather">
         <form>
@@ -43,7 +42,7 @@ export default function Weater() {
         <h1>{weatherData.city}</h1>
         <ul>
           <li>Monday 16:13</li>
-          <li>Rain</li>
+          <li className="text-capitalize">{weatherData.description}</li>
         </ul>
         <div className="row mt-3">
           <div className="col-6">
@@ -55,9 +54,8 @@ export default function Weater() {
           </div>
           <div className="col-6">
             <ul>
-              <li>Precipitation: 15% </li>
               <li>Humidity: {weatherData.humidity}% </li>
-              <li>Wind: {weatherData.wind} km/h</li>
+              <li>Wind: {Math.round(weatherData.wind)} km/h</li>
             </ul>
           </div>
         </div>
